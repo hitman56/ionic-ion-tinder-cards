@@ -407,7 +407,9 @@
       restrict: 'E',
       template: '<div class="td-cards" ng-transclude></div>',
       transclude: true,
-      scope: {},
+      scope: {
+        control: '='
+      },
       controller: ['$scope', '$element', function($scope, $element) {
         var swipeableCards = [];
 
@@ -464,11 +466,12 @@
           swipeableCards.push(card);
         };
 
-        $rootScope.yesClick = function() {
+        $scope.internalControl = $scope.control || {};
+        $scope.internalControl.yesClick = function() {
           var topCard = findTopCard();
           if (topCard) topCard.swipeRight();
         };
-        $rootScope.noClick = function() {
+        $scope.internalControl.noClick = function() {
           var topCard = findTopCard();
           if (topCard) topCard.swipeLeft();
         };
