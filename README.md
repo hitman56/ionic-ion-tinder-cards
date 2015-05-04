@@ -38,6 +38,7 @@ $scope.cardSwiped = function(index) {
 ### Programatically swipe cards
 
 It is possible to swipe cards programatically.
+See this [Codepen demo](http://codepen.io/julienroubieu/pen/mJeJJE).
 
 You will need first to add an object in your scope to receive the swipe functions:
 
