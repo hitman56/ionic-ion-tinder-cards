@@ -35,5 +35,29 @@ $scope.cardSwiped = function(index) {
 };
 ```
 
+### Programatically swipe cards
 
+It is possible to swipe cards programatically.
 
+You will need first to add an object in your scope to receive the swipe functions:
+
+```javascript
+$scope.cardsControl = {}
+```
+
+Then, pass this object to the td-cards element, through the `control` attribute.
+
+```html
+<td-cards control="cardsControl">
+  <td-card ng-repeat="card in cards" on-destroy="cardDestroyed($index)" on-swipe="cardSwiped($index)">
+    Card content here
+  </td-card>
+</td-cards>
+```
+
+You can now swipe the top card from your controller or HTML elements:
+
+```javascript
+$scope.cardsControl.swipeLeft()
+$scope.cardsControl.swipeRight()
+```

@@ -467,11 +467,11 @@
         };
 
         $scope.internalControl = $scope.control || {};
-        $scope.internalControl.yesClick = function() {
+        $scope.internalControl.swipeRight = function() {
           var topCard = findTopCard();
           if (topCard) topCard.swipeRight();
         };
-        $scope.internalControl.noClick = function() {
+        $scope.internalControl.swipeLeft = function() {
           var topCard = findTopCard();
           if (topCard) topCard.swipeLeft();
         };
