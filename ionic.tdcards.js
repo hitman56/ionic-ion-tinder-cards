@@ -479,15 +479,4 @@
     }
   }])
 
-  .factory('TDCardDelegate', ['$rootScope', function($rootScope) {
-    return {
-      popCard: function($scope, isAnimated) {
-        $rootScope.$emit('tdCard.pop', isAnimated);
-      },
-      getSwipeableCard: function($scope) {
-        return $scope.swipeCard;
-      }
-    }
-  }]);
-
 })(window.ionic);
