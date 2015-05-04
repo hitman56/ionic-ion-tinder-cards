@@ -114,8 +114,11 @@
     /**
      * Swipe a card out programatically
      */
-    swipe: function() {
-      this.transitionOut();
+    swipeRight: function() {
+      this.transitionOut("right");
+    },
+    swipeLeft: function() {
+      this.transitionOut("left");
     },
     
     /**
@@ -126,41 +129,45 @@
     },
 
     isUnderThreshold: function() {
-      //return true;
       return Math.abs(this.thresholdAmount) < 0.4;
     },
     /**
      * Fly the card out or animate back into resting position.
+     * @param e can be:
+     *  - Event from dragEnd for transitionning from gesture swipe
+     *  - direction string "right" or "left" for programatic swipe
      */
     transitionOut: function(e) {
       var self = this;
 
-      if(this.isUnderThreshold()) {
+      var isGestureSwipe = (typeof e === "object");
+      var swipeRight = isGestureSwipe ? this.x > 0 : e === "right";
+
+      if(isGestureSwipe && this.isUnderThreshold()) {
         self.onSnapBack(this.x, this.y, this.rotationAngle);
         return;
       }
 
-      self.onTransitionOut(self.thresholdAmount);
+      self.onTransitionOut(isGestureSwipe ? self.thresholdAmount : swipeRight ? 0.5 : -0.5);
+
+      var angle, targetX, targetY, velocityX, rotateTo;
       
-      var dir = this.thresholdAmount < 0 ? -1 : 1;
-      var targetX;
-      if(this.x > 0) {
+      if(swipeRight) {
         targetX = (this.parentWidth / 2) + (this.width);
       } else {
         targetX = - (this.parentWidth + this.width);
       }
 
-      var angle, targetY, velocityX, rotateTo;
-      if (e) {
+      if (isGestureSwipe) {
         angle = Math.atan(e.gesture.deltaX / e.gesture.deltaY);
         // Target Y is just the "opposite" side of the triangle of targetX as the adjacent edge (sohcahtoa yo)
         targetY = targetX / Math.tan(angle);
         velocityX = e.gesture.velocityX;
-        rotateTo = this.rotationAngle;//(this.rotationAngle this.rotationDirection * 0.2));// || (Math.random() * 0.4);
+        rotateTo = this.rotationAngle;
       }
       else {
         angle = -1.5;
-        targetY = 0;
+        targetY = 100;
         velocityX = 0.5;
         rotateTo = -0.2;
       }
@@ -168,11 +175,9 @@
       var duration = 0.3 - Math.min(Math.max(Math.abs(velocityX)/10, 0.05), 0.2);
       
       ionic.requestAnimationFrame(function() {
-        self.el.style.transform = self.el.style.webkitTransform = 'translate3d(' + targetX + 'px, ' + targetY + 'px,0) rotate(' + self.rotationAngle + 'rad)';
+        self.el.style.transform = self.el.style.webkitTransform = 'translate3d(' + targetX + 'px, ' + targetY + 'px,0) rotate(' + rotateTo + 'rad)';
         self.el.style.transition = self.el.style.webkitTransition = 'all ' + duration + 's ease-in-out';
       });
-
-      //this.onSwipe && this.onSwipe();
 
       // Trigger destroy after card has swiped out
       setTimeout(function() {
@@ -224,7 +229,7 @@
       e.preventDefault();
       var width = this.el.offsetWidth;
       var point = window.innerWidth / 2 + this.rotationDirection * (width / 2)
-      var distance = Math.abs(point - e.gesture.touches[0].pageX);// - window.innerWidth/2);
+      var distance = Math.abs(point - e.gesture.touches[0].pageX);
 
       this.touchDistance = distance * 10;
     },
@@ -240,7 +245,6 @@
       this.y = this.startY + (e.gesture.deltaY * 0.8);
 
       this.el.style.transform = this.el.style.webkitTransform = 'translate3d(' + this.x + 'px, ' + this.y  + 'px, 0) rotate(' + (this.rotationAngle || 0) + 'rad)';
-
 
       this.thresholdAmount = (this.x / (this.parentWidth/2));
 
@@ -463,11 +467,11 @@
 
         $rootScope.yesClick = function() {
           var topCard = findTopCard();
-          if (topCard) topCard.swipe();
+          if (topCard) topCard.swipeRight();
         };
         $rootScope.noClick = function() {
           var topCard = findTopCard();
-          if (topCard) topCard.swipe();
+          if (topCard) topCard.swipeLeft();
         };
       }] 
     }
