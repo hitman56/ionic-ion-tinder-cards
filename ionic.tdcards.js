@@ -448,10 +448,6 @@
           return (i < swipeableCards.length) ? swipeableCards[i] : undefined;
         };
 
-        $timeout(function() {
-          sortCards();
-        });
-
         this.partial = function(amt) {
           var cardsElements = $element[0].querySelectorAll('td-card');
           var firstCard = cardsElements[0];
