@@ -413,7 +413,6 @@
 
         var sortCards = function() {
           var existingCards = $element[0].querySelectorAll('td-card');
-
           for(var i = 0; i < existingCards.length; i++) {
             var card = existingCards[i];
             if(!card) continue;
@@ -426,7 +425,7 @@
 
         $timeout(function() {
           sortCards();
-        });
+        }, 500); // timeout to let all child cards register themselves
 
         var bringCardUp = function(card, amt, max) {
           var position, newTop;
@@ -435,13 +434,13 @@
           card.style.transform = card.style.webkitTransform = 'translate3d(0, ' + newTop + 'px, 0)';
         };
 
-        var findTopCard = function() {
+        var findBottomCard = function() {
           var i = swipeableCards.length - 1;
           while (swipeableCards[i].destroyed) {i--;}
           return (i >= 0) ? swipeableCards[i] : undefined;
         };
 
-        var findBottomCard = function() {
+        var findTopCard = function() {
           var i = 0;
           while (i < swipeableCards.length && swipeableCards[i].destroyed) {i++;}
           return (i < swipeableCards.length) ? swipeableCards[i] : undefined;
