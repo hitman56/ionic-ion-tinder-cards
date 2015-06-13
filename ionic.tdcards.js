@@ -375,7 +375,7 @@
                 frequency: 15,
                 friction: 250,
                 initialForce: false
-              }) 
+              })
 
               .on('step', function(v) {
                 //Have the element spring over 400px
@@ -397,9 +397,9 @@
             },
           });
           swipeCards.registerCard(swipeableCard);
-        }
+        };
       }
-    }
+    };
   }])
 
   .directive('tdCards', ['$rootScope', '$timeout', function($rootScope, $timeout) {
@@ -412,14 +412,15 @@
       },
       controller: ['$scope', '$element', function($scope, $element) {
         var swipeableCards = [];
+        var vOffset = 4;
 
         var sortCards = function() {
           var existingCards = $element[0].querySelectorAll('td-card');
           for(var i = 0; i < existingCards.length; i++) {
             var card = existingCards[i];
             if(!card) continue;
-            if(i > 0) {
-              card.style.transform = card.style.webkitTransform = 'translate3d(0, ' + (i * 4) + 'px, 0)';
+            if(i > 0 && i < 4) {
+              card.style.transform = card.style.webkitTransform = 'translateY(' + (i * vOffset) + 'px)';
             }
             card.style.zIndex = (existingCards.length - i);
           }
@@ -429,11 +430,9 @@
           sortCards();
         }, 500); // timeout to let all child cards register themselves
 
-        var bringCardUp = function(card, amt, max) {
-          var position, newTop;
-          position = card.style.transform || card.style.webkitTransform;
-          newTop = Math.max(0, Math.min(max, max - (max * Math.abs(amt))));
-          card.style.transform = card.style.webkitTransform = 'translate3d(0, ' + newTop + 'px, 0)';
+        var bringCardUp = function(card, amt) {
+          var offset = - Math.max(0, Math.min(vOffset, vOffset * Math.abs(amt)));
+          card.style.transform = card.style.webkitTransform = 'translateY(' + offset + 'px)';
         };
 
         var findBottomCard = function() {
@@ -450,12 +449,9 @@
 
         this.partial = function(amt) {
           var cardsElements = $element[0].querySelectorAll('td-card');
-          var firstCard = cardsElements[0];
-          var secondCard = cardsElements.length > 2 && cardsElements[1];
-          var thirdCard = cardsElements.length > 3 && cardsElements[2];
-
-          secondCard && bringCardUp(secondCard, amt, 4);
-          thirdCard && bringCardUp(thirdCard, amt, 8);
+          for (var i=1; i<cardsElements.length; i++) {
+            bringCardUp(cardsElements[i], amt);
+          }
         };
 
         this.registerCard = function(card) {
@@ -471,8 +467,8 @@
           var topCard = findTopCard();
           if (topCard) topCard.swipeLeft();
         };
-      }] 
-    }
-  }])
+      }]
+    };
+  }]);
 
 })(window.ionic);
