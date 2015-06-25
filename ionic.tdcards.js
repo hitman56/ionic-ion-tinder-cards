@@ -414,31 +414,16 @@
         var swipeableCards = [];
         var vOffset = 4;
 
-        var sortCards = function() {
-          var existingCards = $element[0].querySelectorAll('td-card');
-          for(var i = 0; i < existingCards.length; i++) {
-            var card = existingCards[i];
-            if(!card) continue;
-            if(i > 0 && i < 4) {
-              card.style.transform = card.style.webkitTransform = 'translateY(' + (i * vOffset) + 'px)';
-            }
-            card.style.zIndex = (existingCards.length - i);
+        var initCard = function(card, index) {
+          card.setZIndex(100-index);
+          if (index > 0 && index < 4) {
+            card.el.style.transform = card.el.style.webkitTransform = 'translateY(' + (index * vOffset) + 'px)';
           }
         };
-
-        $timeout(function() {
-          sortCards();
-        }, 500); // timeout to let all child cards register themselves
 
         var bringCardUp = function(card, amt) {
           var offset = - Math.max(0, Math.min(vOffset, vOffset * Math.abs(amt)));
           card.style.transform = card.style.webkitTransform = 'translateY(' + offset + 'px)';
-        };
-
-        var findBottomCard = function() {
-          var i = swipeableCards.length - 1;
-          while (swipeableCards[i].destroyed) {i--;}
-          return (i >= 0) ? swipeableCards[i] : undefined;
         };
 
         var findTopCard = function() {
@@ -455,6 +440,7 @@
         };
 
         this.registerCard = function(card) {
+          initCard(card, swipeableCards.length);
           swipeableCards.push(card);
         };
 
