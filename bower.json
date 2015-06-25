@@ -12,6 +12,7 @@
     "ionic.tdcards.css",
     "ionic.tdcards.js"
   ],
+  "ignore": [],
   "keywords": [
     "mobile",
     "html5",
