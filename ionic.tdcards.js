@@ -427,19 +427,7 @@
         };
 
         this.partial = function(amt) {
-          var topCardIndex = -1;
-          for (var i=0; i<swipeableCards.length; i++) {
-            var card = swipeableCards[i];
-            if (!card.destroyed) {
-              if (topCardIndex == -1) {
-                // Skip top card
-                topCardIndex = i;
-              }
-              else {
-                bringCardUp(card, amt);
-              }
-            }
-          }
+          // Removed animation, too resource-consuming on Android.
         };
 
         this.registerCard = function(card) {
