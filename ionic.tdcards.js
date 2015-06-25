@@ -48,7 +48,7 @@
      * Set the X position of the card.
      */
     setX: function(x) {
-      this.el.style[ionic.CSS.TRANSFORM] = 'translate3d(' + x + 'px,' + this.y + 'px, 0)';
+      this.el.style.transform = this.el.style.webkitTransform = 'translateX(' + x + 'px)';
       this.x = x;
       this.startX = x;
     },
@@ -57,7 +57,7 @@
      * Set the Y position of the card.
      */
     setY: function(y) {
-      this.el.style[ionic.CSS.TRANSFORM] = 'translate3d(' + this.x + 'px,' + y + 'px, 0)';
+      this.el.style.transform = this.el.style.webkitTransform = 'translateY(' + y + 'px)';
       this.y = y;
       this.startY = y;
     },
@@ -411,19 +411,19 @@
         control: '='
       },
       controller: ['$scope', '$element', function($scope, $element) {
-        var swipeableCards = [];
+        var swipeableCards = []; // children SwipeableCardView instances
         var vOffset = 4;
 
         var initCard = function(card, index) {
           card.setZIndex(100-index);
           if (index > 0 && index < 4) {
-            card.el.style.transform = card.el.style.webkitTransform = 'translateY(' + (index * vOffset) + 'px)';
+            card.setY(index * vOffset);
           }
         };
 
         var bringCardUp = function(card, amt) {
           var offset = - Math.max(0, Math.min(vOffset, vOffset * Math.abs(amt)));
-          card.style.transform = card.style.webkitTransform = 'translateY(' + offset + 'px)';
+          card.setY(offset);
         };
 
         var findTopCard = function() {
@@ -433,9 +433,18 @@
         };
 
         this.partial = function(amt) {
-          var cardsElements = $element[0].querySelectorAll('td-card');
-          for (var i=1; i<cardsElements.length; i++) {
-            bringCardUp(cardsElements[i], amt);
+          var topCardIndex = -1;
+          for (var i=0; i<swipeableCards.length; i++) {
+            var card = swipeableCards[i];
+            if (!card.destroyed) {
+              if (topCardIndex == -1) {
+                // Skip top card
+                topCardIndex = i;
+              }
+              else {
+                bringCardUp(card, amt);
+              }
+            }
           }
         };
 
