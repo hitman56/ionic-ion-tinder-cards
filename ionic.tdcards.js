@@ -388,12 +388,6 @@
               $timeout(function() {
                 $scope.onSnapBack();
               });
-
-              /*
-              animateSpringViaCss(el, 0, 0.5, 50, 700, 10, function (x) {
-                return el.style.transform = el.style.webkitTransform = 'translate3d(' + x + 'px,0,0)';
-              });
-              */
             },
           });
           swipeCards.registerCard(swipeableCard);
@@ -416,7 +410,7 @@
 
         var initCard = function(card, index) {
           card.setZIndex(100-index);
-          if (index > 0 && index < 4) {
+          if (index > 0 && index < 3) {
             card.setY(index * vOffset);
           }
         };
